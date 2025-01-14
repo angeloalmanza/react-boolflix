@@ -9,6 +9,7 @@ function App() {
 
   const [searchValue, setSearchValue] = useState("");
   const [movies, setMovies] = useState([]);
+  const [serieTv, setSerieTv] = useState([]);
 
   const getMovies = (() => {
     axios.get(`${apiUrl}/search/movie`, {
@@ -19,14 +20,28 @@ function App() {
     }).then((resp) => {
       console.log(resp);
       setMovies(resp.data.results);
+      getSerieTv();
+    })
+  })
+
+  const getSerieTv = (() => {
+    axios.get(`${apiUrl}/search/tv`, {
+      params: {
+        api_key: apiKey,
+        query: searchValue
+      }
+    }).then((resp) => {
+      console.log(resp);
+      setSerieTv(resp.data.results);
     })
   })
 
   const globalProvideValue = {
     searchValue,
     setSearchValue,
-    getMovies,
-    movies
+    movies,
+    serieTv,
+    getMovies
   };
 
 
