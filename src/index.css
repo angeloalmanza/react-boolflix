@@ -1,0 +1,11 @@
+ul {
+    list-style: none;
+}
+
+.full-star {
+    color: gold;
+}
+
+.empty-star {
+    color: lightgray;
+}
