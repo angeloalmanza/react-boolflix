@@ -48,14 +48,48 @@ function App() {
     return (
       <>
         {fullStars.map((_, index) => (
-          <FontAwesomeIcon key={`full-${index}`} icon={faStarFull} className="full-star"/>
+          <FontAwesomeIcon key={`full-${index}`} icon={faStarFull} className="full-star" />
         ))}
         {emptyStars.map((_, index) => (
-          <FontAwesomeIcon key={`empty-${index}`} icon={faStarEmpty} className="empty-star"/>
+          <FontAwesomeIcon key={`empty-${index}`} icon={faStarEmpty} className="empty-star" />
         ))}
       </>
     )
   }
+
+  const getDetails = (id, type) => {
+    const endpoint = `${apiUrl}/${type}/${id}`;
+    const params = {
+      api_key: apiKey,
+      append_to_response: "credits"
+    };
+
+    return axios
+      .get(endpoint, { params })
+      .then((response) => {
+        const data = response.data;
+
+        const genres = data.genres ? data.genres.map((genre) => genre.name) : [];
+        const cast = data.credits?.cast
+          ? data.credits.cast.slice(0, 5).map((actor) => ({
+            id: actor.id,
+            name: actor.name,
+          }))
+          : [];
+
+        return {
+          genres,
+          cast,
+        };
+      })
+      .catch((error) => {
+        console.error("Errore durante il fetch dei dettagli:", error);
+        return {
+          genres: [],
+          cast: [],
+        };
+      });
+  };
 
   const globalProvideValue = {
     searchValue,
@@ -64,7 +98,8 @@ function App() {
     serieTv,
     getMovies,
     imgUrl,
-    renderStars
+    renderStars,
+    getDetails
   };
 
 
