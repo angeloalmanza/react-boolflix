@@ -1,6 +1,5 @@
 import HeaderLayout from "./HeaderLayout";
-import MoviesList from "./MoviesList";
-import SerieTvList from "./SerieTvList";
+import AppList from "./AppList";
 
 const AppLayout = () => {
 
@@ -11,9 +10,9 @@ const AppLayout = () => {
             </header>
 
             <main>
-                <MoviesList />
-                <SerieTvList />
+                <AppList />
             </main>
+
         </>
     )
 }
