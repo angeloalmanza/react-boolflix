@@ -1,6 +1,6 @@
 import axios from "axios"
 import GlobalContext from "./contexts/GlobalContext"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppLayout from "./components/AppLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as faStarFull } from "@fortawesome/free-solid-svg-icons";
@@ -91,6 +91,44 @@ function App() {
       });
   };
 
+  const getGenres = () => {
+    const movieGenresUrl = `${apiUrl}/genre/movie/list`;
+    const tvGenresUrl = `${apiUrl}/genre/tv/list`;
+
+    const fetchGenres = (url) => {
+      return axios
+        .get(url, {
+          params: {
+            api_key: apiKey
+          },
+        })
+        .then((resp) => resp.data.genres || [])
+        .catch((error) => {
+          console.error("Errore durante il fetch dei generi:", error);
+          return [];
+        });
+    };
+
+    // Utilizzare Promise.all per gestire entrambe le richieste
+    return Promise.all([fetchGenres(movieGenresUrl), fetchGenres(tvGenresUrl)])
+      .then(([movieGenres, tvGenres]) => ({
+        movieGenres,
+        tvGenres,
+      }))
+      .catch((error) => {
+        console.error("Errore generale durante il fetch dei generi:", error);
+        return { movieGenres: [], tvGenres: [] };
+      });
+  };
+
+  const [genres, setGenres] = useState({ movieGenres: [], tvGenres: [] });
+
+  useEffect(() => {
+    getGenres().then((fetchedGenres) => {
+      setGenres(fetchedGenres);
+    });
+  }, []);
+
   const globalProvideValue = {
     searchValue,
     setSearchValue,
@@ -99,7 +137,8 @@ function App() {
     getMovies,
     imgUrl,
     renderStars,
-    getDetails
+    getDetails,
+    genres
   };
 
 

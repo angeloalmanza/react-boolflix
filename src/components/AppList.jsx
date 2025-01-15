@@ -1,32 +1,47 @@
-import { useContext } from "react"
-import GlobalContext from "../contexts/GlobalContext"
+import { useContext, useState } from "react";
+import GlobalContext from "../contexts/GlobalContext";
 import AppCard from "./AppCard";
+import GenresFilter from "./GenresFilter";
 
 const AppList = () => {
     const { movies, serieTv } = useContext(GlobalContext);
+    const [selectedGenre, setSelectedGenre] = useState("");
+
+    // Filtra i contenuti basandosi sul genere selezionato
+    const filteredMovies = movies.filter((movie) => {
+        return selectedGenre && movie.genre_ids.includes(parseInt(selectedGenre));
+    });
+
+    const filteredSeries = serieTv.filter((serie) => {
+        return selectedGenre && serie.genre_ids.includes(parseInt(selectedGenre));
+    });
 
     return (
         <div>
-            {movies.length === 0 && serieTv.length === 0 ? (
+            <GenresFilter
+                selectedGenre={selectedGenre}
+                setSelectedGenre={setSelectedGenre}
+            />
+            {filteredMovies.length === 0 && filteredSeries.length === 0 ? (
                 <p>Nessun contenuto trovato. Prova a cercare qualcosa.</p>
             ) : (
                 <>
-                    {movies.length > 0 && (
+                    {filteredMovies.length > 0 && (
                         <>
                             <h3>Film</h3>
                             <div className="card-grid">
-                                {movies.map((movie) => (
+                                {filteredMovies.map((movie) => (
                                     <AppCard key={movie.id} curItem={movie} />
                                 ))}
                             </div>
                         </>
                     )}
 
-                    {serieTv.length > 0 && (
+                    {filteredSeries.length > 0 && (
                         <>
                             <h3>Serie TV</h3>
                             <div className="card-grid">
-                                {serieTv.map((serie) => (
+                                {filteredSeries.map((serie) => (
                                     <AppCard key={serie.id} curItem={serie} />
                                 ))}
                             </div>
@@ -35,7 +50,7 @@ const AppList = () => {
                 </>
             )}
         </div>
-    )
-}
+    );
+};
 
 export default AppList;
