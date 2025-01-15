@@ -5,15 +5,15 @@ import GenresFilter from "./GenresFilter";
 
 const AppList = () => {
     const { movies, serieTv } = useContext(GlobalContext);
-    const [selectedGenre, setSelectedGenre] = useState("");
+    const [selectedGenre, setSelectedGenre] = useState("all");
 
     // Filtra i contenuti basandosi sul genere selezionato
     const filteredMovies = movies.filter((movie) => {
-        return selectedGenre && movie.genre_ids.includes(parseInt(selectedGenre));
+        return selectedGenre === "all" || movie.genre_ids.includes(parseInt(selectedGenre));
     });
 
     const filteredSeries = serieTv.filter((serie) => {
-        return selectedGenre && serie.genre_ids.includes(parseInt(selectedGenre));
+        return selectedGenre === "all" || serie.genre_ids.includes(parseInt(selectedGenre));
     });
 
     return (
